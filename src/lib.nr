@@ -21,9 +21,9 @@ struct Point {
 // @dev The function first checks the commitments, then compute the square of the distance between the two points, and finally asserts that the square of the distance is below the square of the threshold.
 // @notice If you use the function in your project, make sure the commitments `commitment_a` & `commitment_b` are public inputs.
 fn check_points_proximity(
-    commitment_a: Field, 
-    commitment_b: Field, 
-    private_point_a: Point, 
+    commitment_a: Field,
+    commitment_b: Field,
+    private_point_a: Point,
     private_point_b: Point,
     distance_threshold: Field
 ) {
@@ -41,17 +41,13 @@ fn translate_point(point: Point, translation_vector: Point) -> Point {
     let translated_point = Point {
         x: point.x + translation_vector.x,
         y: point.y + translation_vector.y,
-        z: point.z + translation_vector.z,
+        z: point.z + translation_vector.z
     };
     translated_point
 }
 
 fn coordinates_to_point(x: Field, y: Field, z: Field) -> Point {
-    let point = Point {
-        x: x,
-        y: y,
-        z: z,
-    };
+    let point = Point { x, y, z };
     point
 }
 
@@ -64,15 +60,14 @@ fn get_euclidean_distance_squared(point_a: Point, point_b: Point) -> Field {
 }
 
 fn get_commitment_of_point(point: Point) -> Field {
-    let computed_commitment = std::hash::pedersen([point.x, point.y, point.z]);
-    computed_commitment[0]
+    let computed_commitment = std::hash::pedersen_hash([point.x, point.y, point.z]);
+    computed_commitment
 }
 
 fn check_commitment_of_point(commitment: Field, point: Point) {
     let computed_commitment = get_commitment_of_point(point);
     assert(commitment == computed_commitment);
 }
-
 
 /////////////////////////////////
 // 2. Euclidean Distance Tests //
@@ -91,7 +86,10 @@ fn test_get_euclidean_distance_squared() {
     assert(get_euclidean_distance_squared(p0, py7) == 49);
     assert(get_euclidean_distance_squared(px7, pz7) == 98);
     assert(get_euclidean_distance_squared(pz7, px7) == 98);
-    assert(get_euclidean_distance_squared(pxBig, pyBig) == 43776484630060050000000000000000000000000000000000000000000000000000000000000);
+    assert(
+        get_euclidean_distance_squared(pxBig, pyBig)
+        == 43776484630060050000000000000000000000000000000000000000000000000000000000000
+    );
 }
 
 #[test]
